@@ -21,6 +21,17 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
+    :root {
+      --spacing: 10px;
+      --blur: 10px;
+      --base: #ffc600;
+    }
+
+    img {
+      padding: var(--spacing);
+      filter: blur(var(--blur));
+      background: var(--base);
+    }
 
     /*
       misc styles, nothing to do with CSS variables
@@ -45,6 +56,16 @@
   </style>
 
   <script>
+    let inputs = document.querySelectorAll('input');
+
+    function doSomething(e) {
+      e.addEventListener('change', e => {
+        console.log(e);
+        document.documentElement.style.cssText = `--${e.target.name}: ${e.target.value}${e.target.dataset.sizing === undefined ? '' : e.target.dataset.sizing}`
+      });
+    }
+
+    inputs.forEach(ele => doSomething(ele));
   </script>
 
 </body>
