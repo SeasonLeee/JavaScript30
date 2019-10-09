@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <form class="search-form">
@@ -14,9 +16,60 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-</script>
+    let placeList = [];
+
+    let filteredPlace;
+
+    fetch(endpoint).then(res => {
+      res.json().then(data => placeList.push(...data));
+    })
+
+    const searchInput = document.querySelector('.search');
+
+    function getRegExp(value) {
+      return new RegExp(value, 'gi');
+    }
+
+    let form = document.querySelector('.search-form');
+    let suggestions = document.querySelector('.suggestions');
+    let suggestionChild = Array.from(document.querySelectorAll('.suggestions > *'));
+
+    function doStuff() {
+      let val = this.value;
+
+      filteredPlace = placeList.filter(
+        ele => getRegExp(val).test(ele.city)
+      );
+
+      console.log(filteredPlace)
+
+      if (!!!val) {
+        // form.append(suggestions);
+
+        suggestionChild.forEach(ele => suggestions.appendChild(ele));
+      } else {
+        if (suggestions.childElementCount > 0) {
+          // form.removeChild(suggestions);
+
+          // suggestionChild.forEach(ele => suggestions.removeChild(ele));
+        }
+
+        filteredPlace.forEach(
+          e => {
+            let li = document.createElement('li');
+            li.append(`${ e.city }`);
+            suggestions.append(li);
+          }
+        )
+      }
+    }
+
+    searchInput.addEventListener('keyup', doStuff);
+
+  </script>
 </body>
+
 </html>
